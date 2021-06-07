@@ -1,5 +1,6 @@
 const MongoClient = require("mongodb").MongoClient;
 const assert = require("assert");
+const dboperations = require("./operations");
 
 const url = "mongodb://localhost:27017";
 const dbname = "conFusion";
@@ -10,27 +11,36 @@ MongoClient.connect(url, (err, client) => {
   console.log("Connected correctly to server.");
 
   const db = client.db(dbname);
-  const collection = db.collection("dishes");
 
-  collection.insertOne(
-    { name: "dish 3", description: "Test" },
-    (err, result) => {
-      assert.strictEqual(err, null);
+  dboperations.insertDocument(
+    db,
+    { name: "dish a", description: "Sample description" },
+    "dishes",
+    (result) => {
+      console.log("Insert document:\n", result.ops);
 
-      console.log("After insert: \n");
-      console.log(result.ops);
+      dboperations.findDocument(db, "dishes", (docs) => {
+        console.log("Found document:\n", docs);
 
-      collection.find({}).toArray((err, docs) => {
-        assert.strictEqual(err, null);
+        dboperations.updateDocument(
+          db,
+          { name: "dish a" },
+          { description: "Updated sample description" },
+          "dishes",
+          (result) => {
+            console.log("Updated document:\n", result.result);
 
-        console.log("Found: \n");
-        console.log(docs);
+            dboperations.findDocument(db, "dishes", (docs) => {
+              console.log("Found document:\n", docs);
 
-        db.dropCollection("dishes", (err, result) => {
-          assert.strictEqual(err, null);
+              db.dropCollection("dishes", (result) => {
+                console.log("Dropped collection: ", result);
 
-          client.close();
-        });
+                client.close();
+              });
+            });
+          }
+        );
       });
     }
   );
