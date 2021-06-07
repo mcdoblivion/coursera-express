@@ -1,0 +1,19 @@
+{
+  "name": "node-mongodb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "mcd.oblivion",
+  "license": "ISC",
+  "dependencies": {
+    "assert": "^2.0.0",
+    "mongodb": "^3.6.9"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
