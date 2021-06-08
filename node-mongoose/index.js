@@ -10,7 +10,7 @@ connect.then((db) => {
   console.log("Connected correctly to server.");
 
   Dishes.create({
-    name: "dish 23",
+    name: "dish 221",
     description: "Sample description",
   })
     .then((dish) => {
@@ -26,7 +26,7 @@ connect.then((db) => {
       console.log(dish);
 
       dish.comments.push({
-        rate: 5,
+        rating: 5,
         comment: "Great !!!",
         author: "mcd.oblivion",
       });
