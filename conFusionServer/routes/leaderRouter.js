@@ -61,7 +61,7 @@ leaderRouter
     Leaders.findByIdAndUpdate(
       req.params.leaderId,
       { $set: req.body },
-      { new: this.true }
+      { new: true }
     )
       .then(
         (leader) => {

@@ -69,7 +69,7 @@ promoRouter
     Promotions.findByIdAndUpdate(
       req.params.promoId,
       { $set: req.body },
-      { new: this.true }
+      { new: true }
     )
       .then(
         (promotion) => {
