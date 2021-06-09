@@ -34,6 +34,10 @@ dishRouter
       )
       .catch((err) => next(err));
   })
+  .put((req, res, next) => {
+    res.statusCode = 403;
+    res.end("PUT operation not supported on /dishes/");
+  })
   .delete((req, res, next) => {
     Dishes.remove({})
       .then(
@@ -59,6 +63,10 @@ dishRouter
         (err) => next(err)
       )
       .catch((err) => next(err));
+  })
+  .post((req, res, next) => {
+    res.statusCode = 403;
+    res.end("POST operation not supported on /dishes/" + req.params.dishId);
   })
   .put((req, res, next) => {
     Dishes.findByIdAndUpdate(
@@ -128,6 +136,14 @@ dishRouter
       )
       .catch((err) => next(err));
   })
+  .put((req, res, next) => {
+    res.statusCode = 403;
+    res.end(
+      "PUT operation not supported on /dishes/" +
+        req.params.dishId +
+        "/comments"
+    );
+  })
   .delete((req, res, next) => {
     Dishes.findById(req.params.dishId)
       .then(
@@ -175,6 +191,15 @@ dishRouter
         (err) => next(err)
       )
       .catch((err) => next(err));
+  })
+  .post((req, res, next) => {
+    res.statusCode = 403;
+    res.end(
+      "POST operation not supported on /dishes/" +
+        req.params.dishId +
+        "/comments/" +
+        req.params.commentId
+    );
   })
   .put((req, res, next) => {
     Dishes.findById(req.params.dishId)
