@@ -2,6 +2,7 @@ var express = require("express");
 const bodyParser = require("body-parser");
 
 const passport = require("passport");
+const authentiacte = require("../authenticate");
 
 const User = require("../models/user");
 const { route } = require("../app");
@@ -33,8 +34,11 @@ router.post("/signup", (req, res, next) => {
 });
 
 router.post("/login", passport.authenticate("local"), (req, res, next) => {
+  const token = authentiacte.getToken({ _id: req.user._id });
+
   res.status(200).json({
     success: true,
+    token: token,
     status: "You are successfully logged in!",
   });
 });
