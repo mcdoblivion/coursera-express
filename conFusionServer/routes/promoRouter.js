@@ -21,7 +21,7 @@ promoRouter
       )
       .catch((err) => next(err));
   })
-  .post(authenticate.verifyUser, (req, res, next) => {
+  .post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Promotions.create(req.body)
       .then(
         (promotion) => {
@@ -32,22 +32,26 @@ promoRouter
       )
       .catch((err) => next(err));
   })
-  .put(authenticate.verifyUser, (req, res) => {
+  .put(authenticate.verifyUser, authenticate.verifyAdmin, (req, res) => {
     res.statusCode = 403;
     res.end("PUT operation not supported on /promotions/");
   })
-  .delete(authenticate.verifyUser, (req, res, next) => {
-    Promotions.remove({})
-      .then(
-        (response) => {
-          console.log("All promotion deletted");
+  .delete(
+    authenticate.verifyUser,
+    authenticate.verifyAdmin,
+    (req, res, next) => {
+      Promotions.remove({})
+        .then(
+          (response) => {
+            console.log("All promotion deletted");
 
-          res.status(200).json(response);
-        },
-        (err) => next(err)
-      )
-      .catch((err) => next(err));
-  });
+            res.status(200).json(response);
+          },
+          (err) => next(err)
+        )
+        .catch((err) => next(err));
+    }
+  );
 
 // /promotions/:promoId
 promoRouter
@@ -66,7 +70,7 @@ promoRouter
     res.statusCode = 403;
     res.end("POST operation not supported on /promotions/:promoId");
   })
-  .put(authenticate.verifyUser, (req, res, next) => {
+  .put(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Promotions.findByIdAndUpdate(
       req.params.promoId,
       { $set: req.body },
@@ -80,17 +84,21 @@ promoRouter
       )
       .catch((err) => next(err));
   })
-  .delete(authenticate.verifyUser, (req, res, next) => {
-    Promotions.findByIdAndDelete(req.params.promoId)
-      .then(
-        (response) => {
-          console.log("Promotion deleted");
+  .delete(
+    authenticate.verifyUser,
+    authenticate.verifyAdmin,
+    (req, res, next) => {
+      Promotions.findByIdAndDelete(req.params.promoId)
+        .then(
+          (response) => {
+            console.log("Promotion deleted");
 
-          res.status(200).json(response);
-        },
-        (err) => next(err)
-      )
-      .catch((err) => next(err));
-  });
+            res.status(200).json(response);
+          },
+          (err) => next(err)
+        )
+        .catch((err) => next(err));
+    }
+  );
 
 module.exports = promoRouter;

@@ -2,7 +2,7 @@ var express = require("express");
 const bodyParser = require("body-parser");
 
 const passport = require("passport");
-const authentiacte = require("../authenticate");
+const authenticate = require("../authenticate");
 
 const User = require("../models/user");
 const { route } = require("../app");
@@ -10,9 +10,16 @@ const { route } = require("../app");
 var router = express.Router();
 
 /* GET users listing. */
-router.get("/", function (req, res, next) {
-  res.send("respond with a resource");
-});
+router.get(
+  "/",
+  authenticate.verifyUser,
+  authenticate.verifyAdmin,
+  (req, res, next) => {
+    User.find({}).then((users) => {
+      res.status(200).json(users);
+    });
+  }
+);
 
 router.post("/signup", (req, res, next) => {
   User.register(
@@ -42,7 +49,7 @@ router.post("/signup", (req, res, next) => {
 });
 
 router.post("/login", passport.authenticate("local"), (req, res, next) => {
-  const token = authentiacte.getToken({ _id: req.user._id });
+  const token = authenticate.getToken({ _id: req.user._id });
 
   res.status(200).json({
     success: true,
