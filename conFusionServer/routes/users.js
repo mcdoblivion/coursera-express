@@ -77,4 +77,20 @@ router.get("/logout", cors.cors, (req, res) => {
   }
 });
 
+router.get(
+  "/facebook/token",
+  cors.cors,
+  passport.authenticate("facebook-token"),
+  (req, res) => {
+    if (req.user) {
+      const token = authenticate.getToken({ _id: req.user._id });
+      res.status(200).json({
+        success: true,
+        token: token,
+        status: "You are successfully logged in!",
+      });
+    }
+  }
+);
+
 module.exports = router;
