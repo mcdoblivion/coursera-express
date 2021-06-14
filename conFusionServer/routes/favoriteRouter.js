@@ -76,6 +76,9 @@ favoriteRouter
 // /favorites/:dishId
 favoriteRouter
   .route("/:dishId")
+  .options(cors.corsWithOptions, (req, res) => {
+    res.sendStatus(200);
+  })
   .get(cors.cors, (req, res, next) => {
     res.status(403).end("GET operation is not supported on /favorites/:dishId");
   })
