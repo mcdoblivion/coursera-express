@@ -8,6 +8,10 @@ const User = require("../models/user");
 
 var router = express.Router();
 
+router.options("*", cors.corsWithOptions, (req, res) => {
+  res.sendStatus(200);
+});
+
 /* GET users listing. */
 router.get(
   "/",
@@ -51,15 +55,36 @@ router.post("/signup", cors.corsWithOptions, (req, res, next) => {
 router.post(
   "/login",
   cors.corsWithOptions,
-  passport.authenticate("local"),
-  (req, res, next) => {
-    const token = authenticate.getToken({ _id: req.user._id });
 
-    res.status(200).json({
-      success: true,
-      token: token,
-      status: "You are successfully logged in!",
-    });
+  (req, res, next) => {
+    passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (!user) {
+        res
+          .status(401)
+          .json({ success: false, status: "Login unsuccessful!", err: info });
+      }
+
+      req.logIn(user, (err) => {
+        if (err) {
+          res.status(401).json({
+            success: false,
+            status: "Login unsuccessful!",
+            err: "Could not login!",
+          });
+        }
+
+        const token = authenticate.getToken({ _id: req.user._id });
+        res.status(200).json({
+          success: true,
+          token: token,
+          status: "You are successfully logged in!",
+        });
+      });
+    })(req, res, next);
   }
 );
 
@@ -90,5 +115,23 @@ router.get(
     }
   }
 );
+
+router.get("/checkJWT", cors.corsWithOptions, (req, res, next) => {
+  passport.authenticate("jwt", { session: false }, (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+
+    if (!user) {
+      return res
+        .status(401)
+        .json({ success: false, status: "JWT invalid", err: info });
+    }
+
+    return res
+      .status(200)
+      .json({ success: true, status: "JWT valid", user: user });
+  })(req, res, next);
+});
 
 module.exports = router;

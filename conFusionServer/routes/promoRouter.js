@@ -16,7 +16,7 @@ promoRouter
     res.sendStatus(200);
   })
   .get(cors.cors, (req, res, next) => {
-    Promotions.find({})
+    Promotions.find(req.query)
       .then(
         (promotions) => {
           res.status(200).json(promotions);
