@@ -1,12 +1,10 @@
 var express = require("express");
-const bodyParser = require("body-parser");
 
 const passport = require("passport");
 const authenticate = require("../authenticate");
 const cors = require("./cors");
 
 const User = require("../models/user");
-const { route } = require("../app");
 
 var router = express.Router();
 
